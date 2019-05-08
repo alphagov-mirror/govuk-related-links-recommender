@@ -244,6 +244,8 @@ if __name__ == "__main__":  # our module is being executed as a program
     content_store_collection = content_store_db["content_items"]
 
     base_path_to_content_id_mapping = get_base_path_to_content_id_mapping(content_store_collection)
+    # TODO: create and save down content_id_to_base_path_mapping so we can
+    #  create links for visual inspection - do they need titles?
 
     output_df = get_all_links_df(content_store_collection, base_path_to_content_id_mapping)
 
