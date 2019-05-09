@@ -10,6 +10,13 @@ logging.config.fileConfig('src/logging.conf')
 
 
 def make_structural_network_and_node_id_mappings(all_links_df):
+    """
+    Takes a DataFrame pages and their (on-page) links as content_ids, returns a DataFrame of these edges using node_ids,
+    and mappings between the node_ids and content_ids
+    :param all_links_df: pandas DataFrame with columns source_content_id and destination_content_id
+    (content_ids of pages, and pages they link to)
+    :return: pandas DataFrame of edges using node_ids, Python dict {content_id: node_id}, Python dict {node_id: content_id}
+    """
     logger = logging.getLogger('make_structural_network.make_structural_network_and_node_id_mappings')
     # filter out any  inks without a destination content ID, as we are building a network based on content_ids
     logger.info(

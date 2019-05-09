@@ -12,6 +12,14 @@ logging.config.fileConfig('src/logging.conf')
 
 def train_node2_vec_model(edges_df, node_id_content_id_mapping,
                           word2vec_workers=3):
+    """
+    Train a node2vec model using a DataFrame of edges (source and target node_ids)
+    and a mapping of the node_ids (used in the DataFrame) to GOV.UK content_ids
+    :param edges_df: pandas DataFrame with source and target columns (containing node_ids)
+    :param node_id_content_id_mapping: Python dictionary {node_id: content_id}
+    :param word2vec_workers: (optional, default=3) number of workers to use for the node2vec fit method (passed to gensim.models.word2vec.Word2Vec)
+    :return: a node2vec model
+    """
     logger = logging.getLogger('train_node2_vec_model.train_node2_vec_model')
 
     logger.info('creating graph from edges_df')
