@@ -14,43 +14,45 @@ def create_graph(edges_df):
     logger = logging.getLogger('train_node2_vec_model.create_graph')
     logger.info('creating graph from edges_df')
     graph = nx.convert_matrix.from_pandas_edgelist(
-        edges_df, source='source_content_id', target='destination_content_id', edge_attr='weight'
+        edges_df, source='source_content_id', target='destination_content_id'
+        # zero weights break node2vec, and weights were not used in the A/B test version
+        # in future if we set weights, node2vec will pick them up https://github.com/eliorc/node2vec/issues/11
+        # , edge_attr='weight'
     )
     return graph
 
 
-def train_node2_vec_model(edges_df,
-                          workers=None):
+def train_node2_vec_model(edges_df, word_2_vec_workers=3
+                          ):
     """
     Train a node2vec model using a DataFrame of edges (source and target node_ids)
     and a mapping of the node_ids (used in the DataFrame) to GOV.UK content_ids
     :param edges_df: pandas DataFrame with source and target columns (containing node_ids)
     # :param node_id_content_id_mapping: Python dictionary {node_id: content_id}
-    :param workers: (optional, default=number of CPUs) number of workers to use for the node2vec random walks and
-        fitting
+    :param word_2_vec_workers: (optional, default=3) number of workers to use for the node2vec fitting
     :return: a node2vec model
     """
     logger = logging.getLogger('train_node2_vec_model.train_node2_vec_model')
 
-    if workers is None:
-        workers = cpu_count()
+    # if workers is None:
+    #     workers = cpu_count()
 
-    logger.info(f'number of workers is {workers}')
+    # logger.info(f'number of workers is {workers}')
 
     graph = create_graph(edges_df)
 
     logger.info('Precomputing probabilities and generating walks')
     # TODO: search this parameter space systematically and change node2vec parameters
     node2vec = Node2Vec(graph, dimensions=64, walk_length=30, num_walks=300,
-                        workers=workers)
+                        workers=1)
 
     logger.info('Fit node2vec model (create embeddings for nodes)')
     # Any keywords acceptable by gensim.Word2Vec can be passed, `dimensions` and `workers` are
     # automatically passed (from the Node2Vec constructor)
     # https://radimrehurek.com/gensim/models/word2vec.html#gensim.models.word2vec.Word2Vec
     # TODO: search this parameter space systematically and change node2vec parameters
-    model = node2vec.fit(window=10, min_count=1, batch_words=4, seed=1,
-                         workers=workers)
+    model = node2vec.fit(window=10, min_count=1, batch_words=4, seed=1, workers=word_2_vec_workers
+                         )
     return model
 
 

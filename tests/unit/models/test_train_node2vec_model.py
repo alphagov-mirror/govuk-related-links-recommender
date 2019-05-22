@@ -14,7 +14,7 @@ def test_train_node2_vec_model(structural_network_fixture,
                                node_id_content_id_mapping_fixture):
     model = train_node2_vec_model(structural_network_fixture,
                                   node_id_content_id_mapping_fixture,
-                                  workers=1)
+                                  word_2_vec_workers=1)
 
     # test we get the same most similar nodes
     assert model.wv.most_similar(
