@@ -123,6 +123,7 @@ jobs:
                   # Clone related links repository
                   git clone https://github.com/alphagov/govuk-related-links-recommender.git
                   cd govuk-related-links-recommender
+                  git checkout predict-only
 
                   # Set execute permission on scripts
                   chmod +x ./provision_generation_machine
@@ -186,7 +187,7 @@ jobs:
         task: destroy-generation-instance
         config:
           params:
-            DESIRED_CAPACITY: 0
+            DESIRED_CAPACITY: 1
             ASG_NAME: related-links-generation
             ROLE_ARN: ((concourse_role_arn_integration))
           platform: linux
