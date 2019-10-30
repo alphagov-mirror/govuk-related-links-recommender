@@ -89,9 +89,9 @@ jobs:
                 rspec spec
             dir: related-links-pr
       - put: related-links-pr
-          params:
-            path: related-links-pr
-            status: success
+        params:
+          path: related-links-pr
+          status: success
     on_failure:
       put: related-links-pr
       params:
