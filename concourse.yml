@@ -67,16 +67,6 @@ jobs:
                 pip install -r requirements.txt
                 pytest tests/unit
             dir: related-links-pr
-        on_failure:
-          put: related-links-pr
-          params:
-            path: related-links-pr
-            status: failure
-        on_success:
-          put: related-links-pr
-          params:
-            path: related-links-pr
-            status: success
       - task: run-ruby-tests
         config:
           platform: linux
@@ -98,16 +88,15 @@ jobs:
                 bundle
                 rspec spec
             dir: related-links-pr
-        on_failure:
-          put: related-links-pr
-          params:
-            path: related-links-pr
-            status: failure
-        on_success:
-          put: related-links-pr
+      - put: related-links-pr
           params:
             path: related-links-pr
             status: success
+    on_failure:
+      put: related-links-pr
+        params:
+          path: related-links-pr
+          status: failure
 
   - name: run-generation-integration
     serial_groups: 
