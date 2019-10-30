@@ -94,9 +94,9 @@ jobs:
             status: success
     on_failure:
       put: related-links-pr
-        params:
-          path: related-links-pr
-          status: failure
+      params:
+        path: related-links-pr
+        status: failure
 
   - name: run-generation-integration
     serial_groups: 
